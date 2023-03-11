@@ -1,9 +1,10 @@
 #!/bin/bash
 
 npx create-react-app gui --template typescript &&
-npm i sass &&
-npm i react-router-dom &&
-npm i react-transition-group &&
+npm install sass &&
+npm install react-router-dom &&
+npm install react-transition-group &&
+npm install react-query @types/react-query &&
 wait &&
 cd gui || exit &&
 wait &&
