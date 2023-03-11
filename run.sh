@@ -223,6 +223,9 @@ NAVBAR_CSS="
     padding: 0;
     margin: 0;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     &:active {
       transform: scale(0.90);
