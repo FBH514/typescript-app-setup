@@ -377,21 +377,25 @@ function Navbar() {
 
     function List() {
 
+        const data = [
+            {title: 'Home', link: '/'},
+            {title: 'About', link: '/about'},
+            {title: 'Contact', link: '/contact'}
+        ]
+
         return (
-            <div id='navbar-list'>
+            <div id={'navbar-list'}>
                 <ul id={'navbar-list-wrapper'} className={'navbar-list'}>
-                    <li onClick={() => {
-                        if (window.innerWidth < 992) HandleMobileMenu()
-                    }}><a href={'/'}>Home</a></li>
-                    <li onClick={() => {
-                        if (window.innerWidth < 992) HandleMobileMenu()
-                    }}><a href={'/about'}>About</a></li>
-                    <li onClick={() => {
-                        if (window.innerWidth < 992) HandleMobileMenu()
-                    }}><a href={'/contact'}>Contact</a></li>
+                    {data.map((item: any, index: number) => {
+                        return(
+                            <li key={index} onClick={() => {
+                                if (window.innerWidth < 992) HandleMobileMenu()
+                            }}><a href={item.link}>{item.title}</a></li>
+                        )
+                    })}
                 </ul>
             </div>
-        )
+        );
     }
 
     return (
