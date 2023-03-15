@@ -24,10 +24,18 @@ import './css/Navbar.scss'
 import './css/Landing.scss'
 import Navbar from './components/Navbar';
 import React from 'react';
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 
 function App() {
     return (
-        <Navbar/>
+        <Router>
+            <Navbar/>
+            <Routes>
+                <Route path={'/'} element={<Home/>}/>
+                <Route path={'/about'} element={<About/>}/>
+                <Route path={'/contact'} element={<Contact/>}/>
+            </Routes>
+        </Router>
     );
 }
 
@@ -338,6 +346,8 @@ echo "$TEMPLATE_CSS" > Template.scss
 
 cd ../components || exit
 NAVBAR_CONTENT="
+import {Link} from 'react-router-dom';
+
 function Navbar() {
 
     function HandleMobileMenu() {
@@ -390,7 +400,7 @@ function Navbar() {
                         return(
                             <li key={index} onClick={() => {
                                 if (window.innerWidth < 992) HandleMobileMenu()
-                            }}><a href={item.link}>{item.title}</a></li>
+                            }}><Link to={item.link}>{item.title}</a></li>
                         )
                     })}
                 </ul>
