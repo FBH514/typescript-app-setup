@@ -2,7 +2,7 @@
 
 npx create-react-app gui --template typescript &&
 npm install sass &&
-npm install react-router-dom &&
+npm install --save react-router-dom @types/react-router-dom &&
 npm install react-transition-group &&
 npm install react-query @types/react-query &&
 wait &&
