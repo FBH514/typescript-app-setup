@@ -171,9 +171,9 @@ LANDING_CSS="
 echo "$LANDING_CSS" > Landing.scss
 
 NAVBAR_CSS="
+
 #navbar {
   padding: 0.5rem 2rem;
-  background: rgba(245, 245, 245, 0.025);
   z-index: 333;
 
   @media screen and (max-width: 991px) {
@@ -253,6 +253,20 @@ NAVBAR_CSS="
   font-size: 1.5rem;
   transition: 0.3s all ease-in-out;
 
+  li, a {
+    text-decoration: none;
+    cursor: pointer;
+    color: rgba(var(--color-light), 0.3);
+
+    @media screen and (max-width: 991px) {
+      padding-left: 1rem;
+    }
+
+    .nav-link-active {
+      color: rgba(var(--color-light), 1);
+    }
+  }
+
   @media screen and (max-width: 991px) {
     position: absolute;
     flex-direction: column;
@@ -261,26 +275,6 @@ NAVBAR_CSS="
     top: 4rem;
     padding: 1rem 0;
     width: 100%;
-  }
-
-  li, a {
-    text-decoration: none;
-    color: rgba(var(--color-white));
-    cursor: pointer;
-
-    @media screen and (max-width: 991px) {
-      padding-left: 1rem;
-    }
-
-    &:hover {
-      background: linear-gradient(
-                      30deg,
-                      rgba(var(--color-primary), 1) 0%,
-                      rgba(var(--color-secondary), 1) 100%
-      );
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
   }
 }
 
@@ -347,16 +341,19 @@ echo "$TEMPLATE_CSS" > Template.scss
 cd ../components || exit
 NAVBAR_CONTENT="
 import {Link} from 'react-router-dom';
+import {useLocation} from 'react-router-dom';
+
 
 function Navbar() {
+
+    const location = useLocation();
 
     function HandleMobileMenu() {
         const active = 'navbar-list-active';
         const button = document.querySelector('.navbar-list');
         if (button!.classList.contains(active)) {
             button!.classList.remove(active);
-        }
-        else {
+        } else {
             button!.classList.add(active);
         }
     }
@@ -370,7 +367,8 @@ function Navbar() {
                     onClick={HandleMobileMenu}
                 >
                     <img
-                        src='https://img.icons8.com/external-anggara-basic-outline-anggara-putra/32/E8D5B5/external-option-social-media-interface-anggara-basic-outline-anggara-putra-2.png' alt={'hamburger-menu'}/>
+                        src='https://img.icons8.com/external-anggara-basic-outline-anggara-putra/32/E8D5B5/external-option-social-media-interface-anggara-basic-outline-anggara-putra-2.png'
+                        alt={'hamburger-menu'}/>
                 </button>
             );
         }
@@ -389,18 +387,23 @@ function Navbar() {
 
         const data = [
             {title: 'Home', link: '/'},
-            {title: 'About', link: '/about'},
-            {title: 'Contact', link: '/contact'}
+            {title: 'Login', link: '/login'}
         ]
 
         return (
             <div id={'navbar-list'}>
                 <ul id={'navbar-list-wrapper'} className={'navbar-list'}>
                     {data.map((item: any, index: number) => {
-                        return(
+                        return (
                             <li key={index} onClick={() => {
                                 if (window.innerWidth < 992) HandleMobileMenu()
-                            }}><Link to={item.link}>{item.title}</a></li>
+                            }}>
+                                <Link
+                                    to={item.link}
+                                    className={location.pathname === item.link ? 'nav-link-active' : 'nav-link'}
+                                >{item.title}
+                                </Link>
+                            </li>
                         )
                     })}
                 </ul>
@@ -418,7 +421,8 @@ function Navbar() {
     );
 }
 
-export default Navbar;"
+export default Navbar;
+"
 
 echo "$NAVBAR_CONTENT" > Navbar.tsx
 
