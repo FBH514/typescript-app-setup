@@ -1,19 +1,18 @@
 #!/bin/bash
 
 npx create-react-app gui --template typescript &&
+cd gui &&
 npm install sass &&
-npm install --save react-router-dom @types/react-router-dom &&
 npm install react-transition-group &&
 npm install react-query @types/react-query &&
-wait &&
-cd gui || exit &&
+npm install react-router-dom &&
 wait &&
 rm -r src && mkdir src && cd src || exit &&
 touch App.tsx index.tsx &&
 mkdir components assets css && cd components || exit &&
 touch Navbar.tsx Landing.tsx &&
 cd ../assets || exit && mkdir images && cd ../css || exit &&
-touch Template.scss Navbar.scss Reset.css Landing.scss &&
+touch Template.scss Navbar.scss Reset.css Landing.scss Home.scss &&
 wait &&
 cd ../ || exit &&
 
@@ -22,7 +21,10 @@ import './css/Reset.css'
 import './css/Template.scss'
 import './css/Navbar.scss'
 import './css/Landing.scss'
+import './css/Login.scss'
 import Navbar from './components/Navbar';
+import Login from './components/Login';
+import Home from './components/Home';
 import React from 'react';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 
@@ -32,8 +34,7 @@ function App() {
             <Navbar/>
             <Routes>
                 <Route path={'/'} element={<Home/>}/>
-                <Route path={'/about'} element={<About/>}/>
-                <Route path={'/contact'} element={<Contact/>}/>
+                <Route path={'/login'} element={<Login/>}/>
             </Routes>
         </Router>
     );
@@ -169,6 +170,172 @@ LANDING_CSS="
 "
 
 echo "$LANDING_CSS" > Landing.scss
+
+LOGIN_CSS="
+#login-content {
+  padding: 2rem;
+  height: calc(100vh - 4rem);
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+#login-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  h1 {
+    font-size: max(3rem, 5vw);
+
+    span {
+      font-size: max(1.5rem, 3vw);
+    }
+  }
+}
+
+#login-content-wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+#login-form {
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 1rem;
+  height: 50vh;
+  width: 50vw;
+  font-weight: 300;
+  position: relative;
+}
+
+
+// settings menu
+#settings {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  width: 100%;
+  height: 100%;
+  transition: 0.3s all ease-in-out;
+
+
+  // settings icon
+  img {
+    cursor: pointer;
+    transform: scale(95%);
+    z-index: 333;
+    margin-right: 2rem;
+    padding: 0.5rem;
+    transition: 0.3s all ease-in-out;
+
+    &:hover {
+      transform: scale(80%);
+      background: rgba(var(--color-dark), 0.3);
+      border-radius: 50%;
+    }
+
+  }
+}
+
+
+// settings list
+.settings-list {
+  opacity: 0;
+  position: absolute;
+  transition: 0.3s all ease-in-out;
+  width: 100%;
+  height: 100%;
+  background: #252834;
+  padding: 1rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  transform: scale(90%);
+  top: 0;
+  left: 0;
+  font-size: 2rem;
+  z-index: -1;
+}
+
+.settings-list-active {
+  opacity: 1;
+  transform: scale(100%);
+  z-index: 222;
+
+  li {
+    transition: 0.3s all ease-in-out;
+    cursor: pointer;
+  }
+
+  li:hover{
+    color: #E63946;
+  }
+}
+
+
+.login-fields {
+  height: 3rem;
+  width: 90%;
+  padding: 0.5rem 1rem;
+  font-size: 2rem;
+  border-radius: 10px;
+  outline: none;
+  border: none;
+  background: rgba(var(--color-dark), 0.3);
+  transition: 0.3s all ease-in-out;
+  color: rgba(var(--color-light));
+  text-align: center;
+
+  &::placeholder {
+    color: rgba(var(--color-light));
+    text-align: center;
+  }
+
+  &:focus {
+    background: #252834;
+  }
+}
+
+#submit-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  height: 3rem;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  outline: none;
+  border: none;
+  background: linear-gradient(
+                  90deg,
+                  #E63946,
+                  #f4a261
+  );
+  font-size: 2rem;
+  color: rgba(var(--color-dark));
+  font-weight: 700;
+  position: relative;
+  transition: 0.3s all ease-in-out;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(95%);
+  }
+}
+"
+
+echo "$LOGIN_CSS" > Login.scss
 
 NAVBAR_CSS="
 
@@ -443,4 +610,78 @@ export default Landing;
 "
 
 echo "$LANDING_CONTENT" > Landing.tsx
+
+LOGIN_CONTENT="
+function Login() {
+
+    function HideOrShow() {
+        const list = document.querySelector('.settings-list') as HTMLUListElement;
+        const active = 'settings-list-active';
+        if (list!.classList.contains(active)) {
+            list!.classList.remove(active);
+        } else {
+            list!.classList.add(active)
+        }
+    }
+
+    function SettingsList() {
+
+        return (
+            <ul id={'settings-list'} className={'settings-list'}>
+                <li>Forgot Password</li>
+                <li>Sign Up</li>
+            </ul>
+        )
+    }
+
+    return (
+        <div id={'login-content'}>
+            <div id={'login-content-wrapper'}>
+                <header id={'login-header'}>
+                    <h1>Welcome Back, <span>Shepherd</span>.</h1>
+                    <p>Please login to continue.</p>
+                </header>
+                <form id={'login-form'}>
+                    <div id={'settings'}>
+                        <img
+                            src='https://img.icons8.com/ios-glyphs/30/E8D5B5/more.png' alt={'more'}
+                            onClick={HideOrShow}
+                        />
+                        <SettingsList/>
+                    </div>
+                    <input
+                        id={'username-input'}
+                        className={'login-fields'}
+                        placeholder={'Username'}
+                    />
+                    <input
+                        id={'password-input'}
+                        className={'login-fields'}
+                        placeholder={'Password'}
+                    />
+                    <button
+                        id={'submit-button'}
+                        type={'submit'}
+                    >Login
+                    </button>
+                </form>
+            </div>
+        </div>
+    );
+}
+
+export default Login;
+"
+echo "$LOGIN_CONTENT" > Login.tsx
+
+HOME_CONTENT="
+function Home() {
+    return <h1>Hello World</h1>
+}
+
+export default Home;
+"
+echo "$HOME_CONTENT" > Home.tsx
+
+
 cd ../ || exit && npm run start
