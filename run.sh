@@ -4,6 +4,7 @@ npx create-react-app gui --template typescript &&
 cd gui &&
 npm install sass &&
 npm install react-transition-group &&
+npm install @types/react-helmet &&
 npm install react-query @types/react-query &&
 npm install react-router-dom &&
 wait &&
